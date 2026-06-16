@@ -4,23 +4,26 @@ import { business } from "@/config/business";
 interface LogoProps {
   size?: "sm" | "md" | "lg";
   className?: string;
+  variant?: "default" | "footer";
 }
 
 const sizes = {
-  sm: { width: 120, height: 48, className: "h-10 w-auto" },
-  md: { width: 160, height: 64, className: "h-14 w-auto" },
-  lg: { width: 200, height: 80, className: "h-16 w-auto" },
+  sm: "h-10",
+  md: "h-14",
+  lg: "h-16",
 };
 
-export function Logo({ size = "md", className = "" }: LogoProps) {
-  const s = sizes[size];
+export function Logo({ size = "md", className = "", variant = "default" }: LogoProps) {
   return (
     <Image
       src={business.logo.src}
       alt={business.logo.alt}
-      width={s.width}
-      height={s.height}
-      className={`object-contain ${s.className} ${className}`}
+      width={400}
+      height={160}
+      className={`w-auto object-contain object-left ${sizes[size]} ${className} ${
+        variant === "footer" ? "brightness-0 invert" : ""
+      }`}
+      style={{ width: "auto", maxHeight: size === "sm" ? "40px" : size === "md" ? "56px" : "64px" }}
       priority={size !== "sm"}
     />
   );

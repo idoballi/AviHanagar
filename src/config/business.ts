@@ -7,7 +7,7 @@ export const business = {
   whatsapp: "https://wa.me/5000000000", // TODO: עדכן קישור WhatsApp
   hours: "TODO: עדכן שעות פעילות", // TODO: עדכן שעות פעילות
   logo: {
-    src: "/images/avi-logo.jpg",
+    src: "/images/avi-logo.png",
     alt: "אבי הנגר – אומנות בעץ",
   },
   images: {
