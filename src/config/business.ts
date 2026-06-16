@@ -7,12 +7,12 @@ export const business = {
   whatsapp: "https://wa.me/5000000000", // TODO: עדכן קישור WhatsApp
   hours: "TODO: עדכן שעות פעילות", // TODO: עדכן שעות פעילות
   logo: {
-    src: "/images/avi-logo.png",
+    src: "/images/avi-logo.jpg",
     alt: "אבי הנגר – אומנות בעץ",
   },
   images: {
-    hero: "/images/hero.jpg",
-    about: "/images/avi.jpg",
+    hero: "/images/work-1.png",
+    about: "/images/avi.png",
   },
   hero: {
     title: "נגרות בהתאמה אישית, בדיוק לבית שלכם",

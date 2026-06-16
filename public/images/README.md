@@ -2,9 +2,9 @@
 
 העתק את התמונות שלך לתיקייה זו:
 
-- `avi-logo.png` – לוגו העסק
-- `hero.jpg` – תמונה ל-Hero
-- `avi.jpg` – תמונה של אבי
-- `work-1.jpg` … `work-6.jpg` – תמונות עבודות לגלריה
+- `avi-logo.jpg` – לוגו העסק
+- `avi.png` – תמונה של אבי (אזור אודות)
+- `work-1.png` … `work-5.png` – תמונות עבודות לגלריה (work-3.jpg)
+- תמונה Hero: `work-1.png` (מוגדר ב-business.ts)
 
 עדכן `src/data/gallery.ts` אם מוסיפים תמונות נוספות.
