@@ -130,8 +130,9 @@ export function MultiStepForm() {
         clearFormStorage();
         setSuccess({ referenceNumber: result.referenceNumber });
       }
-    } catch {
-      setSubmitError("שגיאה בשליחה. נסו שוב או צרו קשר בטלפון.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "שגיאה בשליחה. נסו שוב או צרו קשר בטלפון.";
+      setSubmitError(message);
     } finally {
       setIsSubmitting(false);
     }

@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import { buildMakePayload } from "@/lib/buildMakePayload";
+
+export const maxDuration = 60;
 
 function generateReferenceNumber(): string {
   return `AVI-${Date.now().toString(36).toUpperCase()}`;
@@ -8,8 +11,9 @@ export async function POST(request: Request) {
   const webhookUrl = process.env.MAKE_WEBHOOK_URL;
 
   if (!webhookUrl) {
+    console.error("[submit-lead] MAKE_WEBHOOK_URL missing");
     return NextResponse.json(
-      { success: false, message: "Webhook לא מוגדר" },
+      { success: false, message: "Webhook לא מוגדר – הפעל מחדש את השרת" },
       { status: 500 }
     );
   }
@@ -17,30 +21,7 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const referenceNumber = generateReferenceNumber();
-
-    const payload: Record<string, unknown> = {
-      referenceNumber,
-      submittedAt: new Date().toISOString(),
-    };
-
-    const images: { name: string; type: string; size: number; data: string }[] = [];
-
-    for (const [key, value] of formData.entries()) {
-      if (value instanceof File) {
-        const buffer = Buffer.from(await value.arrayBuffer());
-        images.push({
-          name: value.name,
-          type: value.type,
-          size: value.size,
-          data: buffer.toString("base64"),
-        });
-      } else if (value !== "") {
-        payload[key] = value;
-      }
-    }
-
-    payload.images = images;
-    payload.imageCount = images.length;
+    const payload = buildMakePayload(formData, referenceNumber);
 
     const webhookResponse = await fetch(webhookUrl, {
       method: "POST",
@@ -49,8 +30,10 @@ export async function POST(request: Request) {
     });
 
     if (!webhookResponse.ok) {
+      const errText = await webhookResponse.text().catch(() => "");
+      console.error("[submit-lead] Make error:", webhookResponse.status, errText);
       return NextResponse.json(
-        { success: false, message: "שגיאה בשליחה ל-Make" },
+        { success: false, message: `שגיאה בשליחה ל-Make (${webhookResponse.status})` },
         { status: 502 }
       );
     }
@@ -60,9 +43,10 @@ export async function POST(request: Request) {
       referenceNumber,
       message: "הבקשה התקבלה בהצלחה",
     });
-  } catch {
+  } catch (error) {
+    console.error("[submit-lead] Error:", error);
     return NextResponse.json(
-      { success: false, message: "שגיאה בשליחה" },
+      { success: false, message: "שגיאה בשליחה – נסו שוב" },
       { status: 500 }
     );
   }
