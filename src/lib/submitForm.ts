@@ -6,30 +6,41 @@ export interface SubmitResult {
   message?: string;
 }
 
-/**
- * Mock submit – replaces real API call.
- * TODO: Connect to Supabase for persistence
- * TODO: Trigger n8n webhook via N8N_WEBHOOK_URL env variable
- */
 export async function submitLeadForm(data: LeadFormData): Promise<SubmitResult> {
-  // TODO: Supabase – insert lead into database
-  // const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, ...)
-  // await supabase.from('leads').insert({ ... })
+  const formData = new FormData();
 
-  // TODO: n8n – POST to webhook
-  // if (process.env.N8N_WEBHOOK_URL) {
-  //   await fetch(process.env.N8N_WEBHOOK_URL, { method: 'POST', body: JSON.stringify(data) })
-  // }
+  const textFields: (keyof LeadFormData)[] = [
+    "fullName", "phone", "email", "contactMethod", "workType", "workDescription",
+    "roomOrSpace", "projectContext", "hasPlan", "width", "height", "depth",
+    "noDimensions", "city", "fullAddress", "floor", "hasElevator",
+    "preferredDate", "urgency", "budgetRange", "consentContact", "consentMarketing",
+  ];
 
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  for (const key of textFields) {
+    const value = data[key];
+    if (value !== undefined && value !== null && value !== "") {
+      formData.append(key, String(value));
+    }
+  }
 
-  const referenceNumber = `AVI-${Date.now().toString(36).toUpperCase()}`;
+  data.images?.forEach((file, index) => {
+    formData.append(`image_${index}`, file);
+  });
 
-  console.info("[Mock Submit]", { referenceNumber, data });
+  const response = await fetch("/api/submit-lead", {
+    method: "POST",
+    body: formData,
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(result.message || "שגיאה בשליחה");
+  }
 
   return {
     success: true,
-    referenceNumber,
-    message: "הבקשה התקבלה בהצלחה",
+    referenceNumber: result.referenceNumber,
+    message: result.message,
   };
 }

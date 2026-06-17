@@ -41,13 +41,16 @@ npm run typecheck
 
 כל הטקסטים העסקיים ב־`src/config/business.ts`. שירותים, FAQ וגלריה ב־`src/data/`.
 
+## חיבור Make.com
+
+הגדר `MAKE_WEBHOOK_URL` ב־`.env.local`. הטופס שולח ל־`/api/submit-lead` שמעביר JSON ל-Make.
+
 ## חיבור Supabase
 
 ב־`src/lib/submitForm.ts` – סמן `TODO: Supabase`. הגדר `NEXT_PUBLIC_SUPABASE_URL` ו־`NEXT_PUBLIC_SUPABASE_ANON_KEY` ב־`.env`.
 
-## חיבור n8n Webhook
-
-ב־`src/lib/submitForm.ts` – סמן `TODO: n8n`. הגדר `N8N_WEBHOOK_URL` ב־`.env`.
+ב־`src/app/api/submit-lead/route.ts` – שליחה ל-Make.com webhook.
+TODO: Supabase – שמירה במסד נתונים.
 
 ## מבנה תיקיות
 
