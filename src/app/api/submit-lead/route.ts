@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { buildMakePayload } from "@/lib/buildMakePayload";
+import { MAKE_WEBHOOK_URL } from "@/config/webhook";
 
 export const maxDuration = 60;
 
@@ -8,7 +9,7 @@ function generateReferenceNumber(): string {
 }
 
 export async function POST(request: Request) {
-  const webhookUrl = process.env.MAKE_WEBHOOK_URL;
+  const webhookUrl = MAKE_WEBHOOK_URL;
 
   if (!webhookUrl) {
     console.error("[submit-lead] MAKE_WEBHOOK_URL missing");
